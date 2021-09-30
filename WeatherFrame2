@@ -1,0 +1,120 @@
+defaults: {
+    bgName: "",         // .jpg, .gif, .png, Full screen animated gifs too!
+    videoName: " ",     // your local picture files go in "images" folder of MMM-EasyBack
+    youTubeID: "",      // YouTube ID from the YouTube url
+    height: "600px",   // your display's resolution in pixels. Enter in config.js
+    width: "1024px",    // your display's resolution in pixels. Enter in config.js
+    animationSpeed: "0",
+    updateInterval: 60 * 60 * 1000,
+},
+
+start: function() {
+
+    this.timer = null;
+},
+
+notificationReceived: function (notification, payload, sender){
+
+    if (notification === 'DOM_OBJECTS_CREATED'){
+        self = this;
+        this.url ='';
+    rand = Math.floor(Math.random() * 2)+1; //randomn number to pick gif
+    rand = 1;
+    var day = new Date();
+    var hour = day.getHours();
+    var minutes = day.getMinutes();
+
+    
+        setInterval(function() {
+        self.updateDom(self.config.animationSpeed || 0);
+        }, this.config.updateInterval);
+
+        
+        this.myJob();
+    }
+},
+    myJob: function(){
+        clearTimeout(this.timer);
+        let rand = Math.floor(Math.random()*2)+1;
+        let hour = (new Date()).getHours();
+
+        if(hour <= 16){
+            folder="Afternoon";
+            } else if(hour >= 16 ){ folder = "Late";
+        }
+        this.timer = setTimeout(myJob, 1000) {
+            if (this.config.bgName != "") {
+                this.url = "modules/MMM-MainScreen/images/" + folder +"/" + rand +".gif";
+            } else if (this.config.vidoeName != "") {
+                this.url = "modules/MMM-MainScreen/videos/" + this.config.video;
+            }
+            this.myJob();
+
+        }, this.config.updateInterval);
+    },
+
+
+
+
+//     self = this;
+//     this.url ='';
+// rand = Math.floor(Math.random() * 2)+1; //randomn number to pick gif
+// rand = 1;
+// var day = new Date();
+// var hour = day.getHours();
+// var minutes = day.getMinutes();
+
+// if(hour <= 16){
+// folder="Afternoon";
+// } else if(hour >= 16 ){ folder = "Late";
+// }
+//     setInterval(function() {
+//     self.updateDom(self.config.animationSpeed || 0);
+//     }, this.config.updateInterval);
+
+//     if (this.config.bgName != "") {
+//         this.url = "modules/MMM-MainScreen/images/" + folder +"/" + rand +".gif";
+//     } else if (this.config.vidoeName != "") {
+//         this.url = "modules/MMM-MainScreen/videos/" + this.config.video;
+//     }
+
+},
+
+
+getStyles: function() {
+    return ["MMM-MainScreen.css"]
+},
+
+// Override dom generator.
+getDom: function() {
+
+  if (this.config.youTubeID != '') {
+
+    var iframe = document.createElement("IFRAME");
+    iframe.classList.add("iframe");
+    iframe.style = "border: 0 none transparent ";
+    iframe.width = this.config.width;
+    iframe.height = this.config.height;
+    type="text/javascript";
+    iframe.src="https://www.youtube.com/embed/" + this.config.youTubeID + "?autoplay=1&loop=1&playlist=" + this.config.youTubeID;
+
+    return iframe;
+
+  } else
+
+    var wrapper = document.createElement("div");
+
+    var image = document.createElement("img");
+    if (this.config.bgName != '') {
+        image.src = this.url;
+        image.className = "photo";
+        console.log("MMM-EasyBack: Now showing image background")
+        wrapper.appendChild(image);
+
+    }else {
+        console.log("MMM-MainScreen error: Please enter either image OR video in config.js NOT BOTH");
+    }
+
+    return wrapper;
+},
+});
